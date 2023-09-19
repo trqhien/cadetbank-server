@@ -1,0 +1,144 @@
+# Node.js
+node_modules/
+
+# Visual Studio Code
+.vscode/
+
+# MongoDB
+data/
+
+# Environment Variables
+.env
+
+# Logs
+*.log
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# Docker
+.docker/
+
+# IDE settings
+.idea/
+*.suo
+*.ntvs*
+
+# Compiled binary addons (node-sass)
+build/Release
+
+# Yarn
+yarn.lock
+
+# npm-debug.log
+npm-debug.log
+
+# pnpm
+pnpm-debug.log
+
+# Grunt intermediate storage (https://github.com/gruntjs/grunt-contrib-jst/issues/31)
+.grunt/
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (node-gyp)
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.local
+.env.development
+.env.test
+.env.production
+.env.local.js
+.env.development.js
+.env.test.js
+.env.production.js
+
+# Serverless directories
+.serverless/
+
+# Parcel cache
+.cache/
+
+# Next.js build output
+.next/
+
+# Nuxt.js build / generate output
+.nuxt/
+
+# Gatsby files
+.cache/
+public/
+.DS_Store
+.DS_Store?
+Thumbs.db
+
+# Flutter/Dart dependencies
+.dart_tool/
+.packages
+
+# IntelliJ project
+.idea/
+
+# Flutter/Dart SDK
+bin/cache/
+
+# Android
+android/
+build/
+.vscode/
+*.iml
+
+# iOS
+ios/
+Pods/
+*.xcodeproj/
+*.xcworkspace/
+*.xcuserdatad/
+
+# Flutter/Dart-specific
+**/doc/api/
+**/lib/gen/
+**/lib/GeneratedPluginRegistrant.java
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.pub-cache/
+.idea/
+.project/
+*.iml
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+flutter_unity_widget/.lib_build_id
+**/.dart_tool/
+ios/Flutter/Flutter.xcconfig
+.flutter-plugins-dependencies
+
+# dart_test.yaml
+.dart_tool/
+.dart_tool/**
+.cache/
