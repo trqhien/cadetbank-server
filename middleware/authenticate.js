@@ -13,6 +13,10 @@ module.exports = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return res.json(responseUtil.createErrorResponse("Authentication failed")); 
+    if (error.name === 'TokenExpiredError') {
+      return res.json(responseUtil.tokenExpired()); 
+    } else {
+      return res.json(responseUtil.createErrorResponse("Authentication failed")); 
+    }
   }
 };

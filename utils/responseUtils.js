@@ -1,9 +1,7 @@
 function createErrorResponse(reason) {
   return {
     code: 0,
-    error: {
-      reason: reason
-    }
+    error: { reason }
   };
 }
 
@@ -14,7 +12,17 @@ function createSuccessResponse(responseObject) {
   };
 }
 
+function tokenExpired() {
+  return {
+    code: 3,
+    error: {
+      reason: "Token has expired"
+    }
+  };
+}
+
 module.exports = {
   createErrorResponse,
-  createSuccessResponse
+  createSuccessResponse,
+  tokenExpired
 };
