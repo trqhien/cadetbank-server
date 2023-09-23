@@ -1,12 +1,19 @@
+require('dotenv').config();
 const express = require('express');
+const swaggerOptions = require('./swaggerOptions')
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const routes = require('./routers/routes');
+const swaggerAccessRestriction = require('./middleware/swaggerAccessRestriction');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-mongoose.connect('mongodb://localhost:27017/cadetbank-db', {
+const PORT = process.env.PORT || 3000;
+const DATABASE_URL = process.env.DATABASE_URL;
+
+mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -21,7 +28,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api', routes);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerOptions)));
+app.use('/api', swaggerAccessRestriction,  routes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

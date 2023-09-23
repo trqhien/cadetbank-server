@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../../db/userModel');
+const BlacklistToken = require('../../db/blacklistToken');
 const responseUtil = require('../../utils/responseUtils');
 
 exports.login = async (req, res) => {
@@ -36,6 +37,25 @@ exports.login = async (req, res) => {
     );
   } catch (error) {
     return res.json(responseUtil.createErrorResponse("Authentication failed"));
+  }
+};
+
+exports.logout = async (req, res) => {
+  const token = req.headers.authorization;
+
+  try {
+    const newBlacklist = new BlacklistToken({ token });
+    await newBlacklist.save();
+
+    return res.json(
+      responseUtil.createSuccessResponse({
+        message: "Logged out successfully"
+      })
+    );
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error" });
   }
 };
 

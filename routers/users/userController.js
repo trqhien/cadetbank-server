@@ -100,15 +100,17 @@ exports.updateDetails = async (req, res) => {
       delete newDetails.email;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: newDetails },
-      { new: true }
-    );
+    const updatedUser = await User
+      .findByIdAndUpdate(
+        userId,
+        { $set: newDetails },
+        { new: true }
+      )
+      .select('-password -_id');
 
     if (!updatedUser) {
       return res.json(responseUtil.createErrorResponse('User not found or no updates made'));
-    }
+    } 
 
     res
       .status(200)

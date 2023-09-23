@@ -26,9 +26,7 @@ exports.serverError = async (req, res) => {
 }
 
 exports.greet = async (req, res) => {
-  // console.log(req.headers.token);
-  // console.log(req.body.message);
-  const { greetMessage } = req.body;
+  const { message } = req.body;
 
-  return res.status(200).json({ greetMessage });
+  return res.status(200).json({ message });
 }
