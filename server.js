@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const swaggerOptions = require('./swaggerOptions')
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -21,6 +22,7 @@ mongoose.connection.on('error', (error) => {
   console.error('MongoDB Connection Error:', error);
 });
 
+app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => {
   setTimeout(next, 300);
