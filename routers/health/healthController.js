@@ -1,8 +1,11 @@
-const mongoose = require('mongoose');
+const { dynamodb } = require('../../db/dynamodb');
+const { ListTablesCommand } = require('@aws-sdk/client-dynamodb');
 
 exports.healthCheck = async (req, res) => {
   try {
-    await mongoose.connection.db.admin().ping();
+    // Check DynamoDB connection by listing tables
+    const listTablesCommand = new ListTablesCommand({});
+    await dynamodb.send(listTablesCommand);
     var databaseStatus = 'Connected';
   } catch (error) {
     var databaseStatus = 'Error: ' + error.message;

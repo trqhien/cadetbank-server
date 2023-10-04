@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const responseUtil = require('../utils/responseUtils');
-const BlacklistToken = require('../db/blacklistToken');
+const { dynamodb, BlacklistTokensTable } = require('../db/dynamodb');
+const { GetItemCommand } = require('@aws-sdk/client-dynamodb');
 
 module.exports = async (req, res, next) => {
   const token = req.headers.authorization;
@@ -11,8 +12,15 @@ module.exports = async (req, res, next) => {
 
   try {
     // Check if the token has been revoked
-    const isTokenRevoked = await BlacklistToken.exists({ token });
-    if (isTokenRevoked) {
+    const params = {
+      Key: {
+        "token": { S: token },
+      },
+      TableName: BlacklistTokensTable
+    };
+    const revokedToken = await dynamodb.send(new GetItemCommand(params));
+
+    if (revokedToken.Item) {
       return res.json(responseUtil.createErrorResponse("Access denied. Token revoked."));
     }
 
