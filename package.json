@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "nodemon": "nodemon server.js",
+    "startLocalDb": "docker-compose up -d",
+    "setupLocalDb": "node ./db/setupLocalDb.js",
     "generate-docs": "swagger-jsdoc -o ./docs/swaggerDef.js ./swaggerOptions.js"
   },
   "keywords": [],

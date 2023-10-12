@@ -19,6 +19,7 @@ bower_components/
 
 # Docker
 .docker/
+docker/
 
 # IDE settings
 .idea/
