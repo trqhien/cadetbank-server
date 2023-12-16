@@ -48,8 +48,8 @@ exports.login = async (req, res) => {
         user: {
           username: user.username?.S,
           email: user.email.S,
-          accountType: user.accountType.S,
-          phone: user.phone.S,
+          accountType: user.accountType?.S,
+          phone: user.phone?.S,
         }
       })
     );

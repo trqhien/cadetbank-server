@@ -65,7 +65,7 @@ const authenticate = require('../../middleware/authenticate');
  *                           type: string
  *                           example: +63123456789
 */
-router.get('/register', UserController.register);
+router.post('/register', UserController.register);
 
 /**
  * @swagger

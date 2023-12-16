@@ -10,8 +10,8 @@ exports.register = async (req, res) => {
 
   if (
     email === undefined || Object.keys(email).length === 0
-    || accountType === undefined || Object.keys(accountType).length === 0
-    || phone === undefined || Object.keys(phone).length === 0
+    // || accountType === undefined || Object.keys(accountType).length === 0
+    // || phone === undefined || Object.keys(phone).length === 0
     || password === undefined || Object.keys(password).length === 0
   ) {
     return res.json(responseUtil.createErrorResponse("Missing data"));
@@ -34,20 +34,20 @@ exports.register = async (req, res) => {
     }
 
     // Verify if phone has been registered
-    const phoneQueryParams = {
-      TableName: UsersTable,
-      IndexName: 'phone-index',
-      KeyConditionExpression: 'phone = :phone',
-      ExpressionAttributeValues: {
-        ':phone': { S: phone},
-      },
-    };
+    // const phoneQueryParams = {
+    //   TableName: UsersTable,
+    //   IndexName: 'phone-index',
+    //   KeyConditionExpression: 'phone = :phone',
+    //   ExpressionAttributeValues: {
+    //     ':phone': { S: phone},
+    //   },
+    // };
 
-    const phoneQueryResult = await dynamodb.send(new QueryCommand(phoneQueryParams));
+    // const phoneQueryResult = await dynamodb.send(new QueryCommand(phoneQueryParams));
 
-    if (phoneQueryResult.Count > 0) {
-      return res.json(responseUtil.createErrorResponse("Phone number has been register"));
-    }
+    // if (phoneQueryResult.Count > 0) {
+    //   return res.json(responseUtil.createErrorResponse("Phone number has been register"));
+    // }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -57,8 +57,8 @@ exports.register = async (req, res) => {
       Item: {
         userId: { S: uuidv4() },
         email: { S: email },
-        accountType: { S: accountType },
-        phone: { S: phone },
+        // accountType: { S: accountType },
+        // phone: { S: phone },
         password: { S: hashedPassword },
       },
     };
