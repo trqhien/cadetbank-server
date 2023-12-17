@@ -1,4 +1,4 @@
-const { PutItemCommand, QueryCommand, GetItemCommand } = require('@aws-sdk/client-dynamodb');
+const { PutItemCommand, QueryCommand, GetItemCommand, DeleteItemCommand } = require('@aws-sdk/client-dynamodb');
 const { v4: uuidv4 } = require('uuid');
 const { dynamodb, FundsTable } = require('../../db/dynamodb');
 const responseUtil = require('../../utils/responseUtils');
@@ -114,8 +114,37 @@ exports.fundDetails = async (req, res) => {
         description: Item.description?.S
       }));
   } catch (err) {
-    const stackTrace = err.stack.split('\n')[1].trim(); 
-    console.log(stackTrace)
+    res
+      .status(500)
+      .json(responseUtil.createErrorResponse(`${err}`));
+  }
+}
+
+exports.deleteFund = async (req, res) => {
+  const { userId } = req.user;
+  const { fundId } = req.params;
+
+  try {
+    const deleteItemParams = {
+      TableName: FundsTable,
+      Key: { 
+        fundId: { S: fundId },
+        creatorId: { S: userId }
+      },
+    };
+  
+    const { ConsumedCapacity } = await dynamodb.send(new DeleteItemCommand(deleteItemParams));
+
+    if (!ConsumedCapacity) {
+      res
+      .status(200)
+      .json(responseUtil.createSuccessResponse({ fundId }));
+    } else {
+      res
+      .status(200)
+      .json(responseUtil.createErrorResponse(`Fund id ${fundId} not found`));
+    }
+  } catch (err) {
     res
       .status(500)
       .json(responseUtil.createErrorResponse(`${err}`));

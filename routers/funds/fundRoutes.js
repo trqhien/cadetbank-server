@@ -7,5 +7,6 @@ const fundCreationValidator = require('../../middleware/fundCreationValidator');
 router.post('/create', authenticate, fundCreationValidator, FundController.createFund);
 router.get('/list', authenticate, FundController.getFunds);
 router.get('/:fundId', authenticate, FundController.fundDetails);
+router.delete('/:fundId/delete', authenticate, FundController.deleteFund);
 
 module.exports = router;
