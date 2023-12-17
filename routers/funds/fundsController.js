@@ -1,4 +1,4 @@
-const { PutItemCommand } = require('@aws-sdk/client-dynamodb');
+const { PutItemCommand, QueryCommand } = require('@aws-sdk/client-dynamodb');
 const { v4: uuidv4 } = require('uuid');
 const { dynamodb, FundsTable } = require('../../db/dynamodb');
 const responseUtil = require('../../utils/responseUtils');
@@ -40,6 +40,49 @@ exports.createFund = async (req, res) => {
         currency: putParams.Item.currency.S
       }));
   } catch (err) {
+    res
+      .status(500)
+      .json(responseUtil.createErrorResponse(`${err}`));
+  }
+}
+
+exports.getFunds = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const queryParams = {
+      TableName: FundsTable,
+      IndexName: 'creator-id-index',
+      KeyConditionExpression: 'creatorId = :creatorId',
+      ExpressionAttributeValues: {
+        ':creatorId': { S: userId }
+      },
+      ProjectionExpression: "fundId, #fundName, balance, fundType, description, currency",
+      ExpressionAttributeNames: {
+        '#fundName': 'name' // Use alias here as name is areserved keyword
+      }
+    };
+
+    const { Items } = await dynamodb.send(new QueryCommand(queryParams));
+
+    const funds = Items.map(item => ({
+      fundId: item.fundId.S,
+      balance: parseFloat(item.balance.N),
+      fundType: item.fundType.S,
+      name: item.name.S,
+      currency: item.currency.S,
+      description: item.description?.S
+    }));
+
+    res
+      .status(200)
+      .json(responseUtil.createSuccessResponse({
+        funds
+      }));
+  } catch (err) {
+
+    const stackTrace = err.stack.split('\n')[1].trim(); 
+    console.log(stackTrace)
     res
       .status(500)
       .json(responseUtil.createErrorResponse(`${err}`));
