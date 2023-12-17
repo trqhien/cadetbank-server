@@ -9,9 +9,11 @@ const dynamodb = new DynamoDBClient({
 const UsersTable = 'users';
 const Blacklist = 'blacklist';
 const BlacklistTokensTable = 'blacklist-tokens';
+const FundsTable = 'funds';
 
 module.exports = {
   dynamodb,
   UsersTable,
-  BlacklistTokensTable
+  BlacklistTokensTable,
+  FundsTable
 };
