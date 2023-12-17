@@ -1,4 +1,4 @@
-const { PutItemCommand, QueryCommand } = require('@aws-sdk/client-dynamodb');
+const { PutItemCommand, QueryCommand, GetItemCommand } = require('@aws-sdk/client-dynamodb');
 const { v4: uuidv4 } = require('uuid');
 const { dynamodb, FundsTable } = require('../../db/dynamodb');
 const responseUtil = require('../../utils/responseUtils');
@@ -80,7 +80,40 @@ exports.getFunds = async (req, res) => {
         funds
       }));
   } catch (err) {
+    // const stackTrace = err.stack.split('\n')[1].trim(); 
+    // console.log(stackTrace)
+    res
+      .status(500)
+      .json(responseUtil.createErrorResponse(`${err}`));
+  }
+}
 
+exports.fundDetails = async (req, res) => {
+  const { userId } = req.user;
+  const fundId = req.params.fundId;
+
+  try {
+    const getItemParams = {
+      TableName: FundsTable,
+      Key: { 
+        fundId: { S: fundId },
+        creatorId: { S: userId }
+      },
+    };
+  
+    const { Item } = await dynamodb.send(new GetItemCommand(getItemParams));
+
+    res
+      .status(200)
+      .json(responseUtil.createSuccessResponse({
+        fundId: Item.fundId.S,
+        balance: parseFloat(Item.balance.N),
+        fundType: Item.fundType.S,
+        name: Item.name.S,
+        currency: Item.currency.S,
+        description: Item.description?.S
+      }));
+  } catch (err) {
     const stackTrace = err.stack.split('\n')[1].trim(); 
     console.log(stackTrace)
     res
