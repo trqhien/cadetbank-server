@@ -41,7 +41,6 @@ exports.recordTransaction = async (req, res) => {
       const { Item } = await dynamodb.send(new GetItemCommand(getDestinationFundParams));
       destinationFund = Item;
     }
-
     
     // Check if amount is less than or equal to the source fund balance
     const sourceFundBalance = parseFloat(sourceFund.balance.N);
@@ -56,7 +55,7 @@ exports.recordTransaction = async (req, res) => {
       TableName: TransactionsTable,
       Item: {
         transactionId: { S: uuidv4() },
-        timestamp: { N:  Date.now() },
+        timestamp: { N: `${Date.now()}` },
         sourceFundId: { S: sourceFundId },
         amount: { N: amount },
         type: { S: "inout" },
@@ -81,7 +80,7 @@ exports.recordTransaction = async (req, res) => {
       .status(200)
       .json(responseUtil.createSuccessResponse({
         transactionId: transactionParams.Item.transactionId.S,
-        timestamp: transactionParams.Item.timestamp.N,
+        timestamp: Number(transactionParams.Item.timestamp.N),
         sourceFundId: transactionParams.Item.sourceFundId.S,
         destinationFundId: transactionParams.Item.destinationFundId?.S,
         amount: transactionParams.Item.amount.N,

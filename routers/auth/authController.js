@@ -1,8 +1,10 @@
+const axios = require('axios');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const responseUtil = require('../../utils/responseUtils');
 const { dynamodb, UsersTable, BlacklistTokensTable } = require('../../db/dynamodb');
 const { QueryCommand, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+const { v4: uuidv4 } = require('uuid');
 
 exports.register = async (req, res) => {
   const { email, accountType, phone, password } = req.body;
@@ -66,7 +68,7 @@ exports.register = async (req, res) => {
 
     // log in
     const loginResponse = await axios.post(
-      "http://localhost:80/api/auth/login",
+      "http://ec2-13-250-60-209.ap-southeast-1.compute.amazonaws.com/api/auth/login",
       {email, password}
     );
 
