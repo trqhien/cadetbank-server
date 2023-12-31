@@ -96,3 +96,46 @@ exports.recordTransaction = async (req, res) => {
       .json(responseUtil.createErrorResponse(`${err}`));
   }
 }
+
+exports.getTransactions = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const queryParams = {
+      TableName: TransactionsTable,
+      IndexName: 'user-id-index',
+      KeyConditionExpression: 'userId = :userId',
+      ExpressionAttributeValues: {
+        ':userId': { S: userId }
+      },
+      // ProjectionExpression: "fundId, #fundName, balance, fundType, description, currency",
+      // ExpressionAttributeNames: {
+      //   '#fundName': 'name' // Use alias here as name is areserved keyword
+      // }
+    };
+
+    const { Items } = await dynamodb.send(new QueryCommand(queryParams));
+
+    const transactions = Items.map(item => ({
+      transactionId: item.transactionId.S,
+      timestamp: Number(item.timestamp.N),
+      sourceFundId: item.sourceFundId.S,
+      destinationFundId: item.destinationFundId?.S,
+      amount: item.amount.N,
+      type: item.type.S,
+      userId: item.userId.S,
+      currency: item.currency.S,
+      description: item.description.S,
+    }));
+
+    res
+      .status(200)
+      .json(responseUtil.createSuccessResponse({
+        transactions
+      }));
+  } catch (err) {
+    res
+      .status(500)
+      .json(responseUtil.createErrorResponse(`${err}`));
+  }
+}
