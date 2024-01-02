@@ -11,11 +11,13 @@ const Blacklist = 'blacklist';
 const BlacklistTokensTable = 'blacklist-tokens';
 const FundsTable = 'funds';
 const TransactionsTable = 'transactions';
+const SettingsTable = "settings";
 
 module.exports = {
   dynamodb,
   UsersTable,
   BlacklistTokensTable,
   FundsTable,
-  TransactionsTable
+  TransactionsTable,
+  SettingsTable
 };
